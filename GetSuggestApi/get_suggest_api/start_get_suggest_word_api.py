@@ -10,7 +10,7 @@ import tornado.ioloop
 from tornado_json.routes import get_routes
 from tornado_json.application import Application
 
-from helloworld import for_api_get_suggest
+from ApiFiles import for_api_get_suggest
 
 
 def main():
@@ -19,8 +19,8 @@ def main():
     #   request handler name (with 'handler' removed from the end of the
     #   name if it is the name).
     # [("/api/helloworld", helloworld.api.HelloWorldHandler)]
-    import helloworld
-    routes = get_routes(helloworld)
+    import ApiFiles
+    routes = get_routes(ApiFiles)
     print("Routes\n======\n\n" + json.dumps(
         [(url, repr(rh)) for url, rh in routes],
         indent=2)

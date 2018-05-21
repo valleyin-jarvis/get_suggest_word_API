@@ -1,10 +1,11 @@
-from tornado import gen
+import datetime
 
+from tornado import gen
 from tornado_json.requesthandlers import APIHandler
 from tornado_json import schema
 from tornado_json.gen import coroutine
 
-from helloworld import for_api_get_suggest
+from ApiFiles import for_api_get_suggest
 
 class HelloWorldHandler(APIHandler):
 
@@ -52,6 +53,7 @@ class PostIt(APIHandler):
     )
     def post(self):
         massege_suggest_word = []
+        
         """
         POST the required parameters to post a Post-It note
 
@@ -59,19 +61,26 @@ class PostIt(APIHandler):
         * `body`: Body of the note
         * `index`: An easy index with which to find the note
         """
+        get_time = datetime.datetime.now()#POST開始時刻        
+        post_time = get_time + datetime.timedelta(hours=9)
 
         #suggest_words = for_api_get_suggest.get_suggest_word(self.body["title"])
         suggest_words = for_api_get_suggest.get_suggest_word(self.body["keyword"])
-
         
+        get_time = datetime.datetime.now()#getした開始時刻
+        done_get_time = get_time + datetime.timedelta(hours=9)
+
         for row in suggest_words[1]:
             massege_suggest_word.append(row)
+        
+        suggest_info = {'PostTime':'{0:%Y-%m-%d %H:%M:%S}'.format(post_time),'DoneGetTime':'{0:%Y-%m-%d %H:%M:%S}'.format(done_get_time),'Keyword':self.body["keyword"],'SuggestWords':massege_suggest_word}
         
         # `schema.validate` will JSON-decode `self.request.body` for us
         #   and set self.body as the result, so we can use that here
         return {
                 #"message": "{}".format(suggest_words[1][0])
-                "message": "{}".format(massege_suggest_word)
+                #"message": "{}".format(massege_suggest_word)
+                "message": "{}".format(suggest_info)
         }
 
 
